@@ -13,7 +13,9 @@ namespace Triotech\AdminerBundle\Adminer;
 
 class Functions
 {
-    /** Get path of the temporary directory
+    /**
+     * Get path of the temporary directory
+     *
      * @return string
      */
     public static function getTempDir()
@@ -35,7 +37,8 @@ class Functions
         return $return;
     }
 
-    /** Read password from file adminer.key in temporary directory or create one
+    /**
+     * Read password from file adminer.key in temporary directory or create one
      *
      * @param bool
      *
@@ -53,11 +56,21 @@ class Functions
         $fp = @fopen($filename, 'w'); // @ - can have insufficient rights //! is not atomic
         if ($fp) {
             chmod($filename, 0660);
-            $return = rand_string();
+            $return = static::randString();
             fwrite($fp, $return);
             fclose($fp);
         }
 
         return $return;
+    }
+
+    /**
+     * Get a random string
+     *
+     * @return string 32 hexadecimal characters
+     */
+    public static function randString()
+    {
+        return md5(uniqid(mt_rand(), true));
     }
 }
