@@ -1,0 +1,6 @@
+services:
+  triotech.adminer.database_extractor:
+    class: Triotech\AdminerBundle\Adminer\DatabaseExtractor
+    arguments:
+      - "@doctrine"
+      - "%triotech.adminer_path%"

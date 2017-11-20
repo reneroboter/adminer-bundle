@@ -1,0 +1,31 @@
+{
+    "name": "triotech/adminer-bundle",
+    "description": "Access your Symfony-defined databases via Adminer",
+    "type": "symfony-bundle",
+    "license": "EUPL-1.2",
+    "authors": [
+        {
+            "name": "Cyril SAINT-YVES",
+            "email": "cyril.saint-yves@triotech.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Triotech\\AdminerBundle\\": "src"
+        },
+        "files": [
+            "src/xxtea.inc.php"
+        ]
+    },
+    "require": {
+        "doctrine/doctrine-bundle": "^1.6",
+        "symfony/symfony": "^2.8|^3.0|^4.0",
+        "triotech/adminer": "dev-master@dev"
+    },
+    "repositories": {
+        "triotech": {
+            "type": "composer",
+            "url": "https://packages.triotech.fr"
+        }
+    }
+}
