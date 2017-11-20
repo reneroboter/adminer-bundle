@@ -49,11 +49,11 @@ class DatabaseExtractor
         $edited = false;
 
         foreach ($this->doctrine->getConnections() as $connection) {
+            $this->storeAdminerPassword($request, $connection);
             $key = $this->buildAdminerKey($connection);
             $val = implode(':', [$key, urlencode($this->encryptAdminerPassword($connection))]);
 
             if (!array_key_exists($key, $databases) || $databases[$key] !== $val) {
-                $this->storeAdminerPassword($request, $connection);
                 $edited = true;
                 $databases[$key] = $val;
             }
@@ -146,6 +146,7 @@ class DatabaseExtractor
      */
     protected function storeAdminerPassword(Request $request, Connection $connection)
     {
+        @session_start();
         $driver = $this->getAdminerDriver($connection);
         $server = $connection->getHost();
         $db = $connection->getDatabase();
