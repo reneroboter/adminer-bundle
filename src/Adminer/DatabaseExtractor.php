@@ -103,7 +103,7 @@ class DatabaseExtractor
 
         return implode('-', [
             base64_encode($this->getAdminerDriver($connection)),
-            base64_encode($params['host']),
+            base64_encode($this->getAdminerHost($connection)),
             base64_encode($params['user']),
             base64_encode($params['dbname']),
         ]);
@@ -133,6 +133,33 @@ class DatabaseExtractor
      *
      * @return string
      */
+    protected function getAdminerHost(Connection $connection)
+    {
+        $host = $connection->getHost();
+        $port = (int)$connection->getPort();
+        $defaultPort = 0;
+
+        if (!$host) {
+            $host = 'localhost';
+        }
+
+        switch ($connection->getDatabasePlatform()->getName()) {
+            case 'mysql':
+                $defaultPort = 3006;
+                break;
+            case 'postgresql':
+                $defaultPort = 5432;
+                break;
+        }
+
+        return $port === 0 || $port === $defaultPort ? $host : "{$host}:{$port}";
+    }
+
+    /**
+     * @param Connection $connection
+     *
+     * @return string
+     */
     protected function encryptAdminerPassword(Connection $connection)
     {
         $private = Functions::passwordFile(true);
@@ -148,7 +175,7 @@ class DatabaseExtractor
     {
         @session_start();
         $driver = $this->getAdminerDriver($connection);
-        $server = $connection->getHost();
+        $server = $this->getAdminerHost($connection);
         $db = $connection->getDatabase();
         $username = $connection->getUsername();
         $password = $request->cookies->has(static::ADMINER_KEY_COOKIE) ? encrypt_string($connection->getPassword(), $request->cookies->get(static::ADMINER_KEY_COOKIE)) : '';
