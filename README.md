@@ -16,7 +16,7 @@ Installation
 1. Add the bundle to your project's dependencies
 
 ```bash
-composer require triotech/adminer-bundle
+composer require triotech/adminer-bundle dev-master@dev
 ```
 
 2. Load the bundle in the dev environment
