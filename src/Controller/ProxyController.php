@@ -27,7 +27,9 @@ class ProxyController extends Controller
     {
         parent::setContainer($container);
 
-        $this->setAdminerPath($container->getParameter('triotech.adminer_path'));
+        if ($container instanceof ContainerInterface) {
+            $this->setAdminerPath($container->getParameter('triotech.adminer_path'));
+        }
     }
 
     /**
@@ -37,6 +39,7 @@ class ProxyController extends Controller
      */
     public function proxyAction(Request $request)
     {
+        $this->disableProfiler();
         $response = $this->get('triotech.adminer.database_extractor')->updateAdminerDatabases($request);
 
         return $response instanceof Response ? $response : new Response(require 'file://' . $this->getAdminerPath(['public', 'index.php']));
@@ -50,6 +53,7 @@ class ProxyController extends Controller
      */
     public function assetAction($type, $asset)
     {
+        $this->disableProfiler();
         $response = new BinaryFileResponse($this->getAdminerPath(['public', $type, $asset]));
 
         if ($type === 'css') {
@@ -61,4 +65,15 @@ class ProxyController extends Controller
         return $response;
     }
 
+    /**
+     * @return self
+     */
+    protected function disableProfiler()
+    {
+        if ($this->container->has('profiler')) {
+            $this->container->get('profiler')->disable();
+        }
+
+        return $this;
+    }
 }
