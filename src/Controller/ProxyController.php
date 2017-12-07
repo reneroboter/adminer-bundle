@@ -23,7 +23,7 @@ class ProxyController extends Controller
     use AdminerPathAwareTrait;
 
     /** @inheritdoc */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         parent::setContainer($container);
 
@@ -37,7 +37,7 @@ class ProxyController extends Controller
      *
      * @return Response
      */
-    public function proxyAction(Request $request)
+    public function proxyAction(Request $request): Response
     {
         $this->disableProfiler();
         $response = $this->get('triotech.adminer.database_extractor')->updateAdminerDatabases($request);
@@ -51,7 +51,7 @@ class ProxyController extends Controller
      *
      * @return Response
      */
-    public function assetAction($type, $asset)
+    public function assetAction($type, $asset): Response
     {
         $this->disableProfiler();
         $response = new BinaryFileResponse($this->getAdminerPath(['public', $type, $asset]));
@@ -68,7 +68,7 @@ class ProxyController extends Controller
     /**
      * @return self
      */
-    protected function disableProfiler()
+    protected function disableProfiler(): self
     {
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();

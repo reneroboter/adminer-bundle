@@ -22,8 +22,8 @@ class DatabaseExtractor
 {
     use AdminerPathAwareTrait;
 
-    const ADMINER_PERMANENT_COOKIE = 'adminer_permanent';
-    const ADMINER_KEY_COOKIE = 'adminer_key';
+    protected const ADMINER_PERMANENT_COOKIE = 'adminer_permanent';
+    protected const ADMINER_KEY_COOKIE = 'adminer_key';
 
     /** @var RegistryInterface */
     protected $doctrine;
@@ -43,7 +43,7 @@ class DatabaseExtractor
      *
      * @return null|RedirectResponse
      */
-    public function updateAdminerDatabases(Request $request)
+    public function updateAdminerDatabases(Request $request): ?RedirectResponse
     {
         $databases = $this->readAdminerDatabases($request);
         $edited = false;
@@ -76,14 +76,14 @@ class DatabaseExtractor
      *
      * @return array
      */
-    protected function readAdminerDatabases(Request $request)
+    protected function readAdminerDatabases(Request $request): array
     {
         $cookie = $request->cookies->get(static::ADMINER_PERMANENT_COOKIE);
         $databases = [];
 
         if ($cookie) {
             foreach (explode(' ', $cookie) as $val) {
-                list($key) = explode(':', $val);
+                [$key] = explode(':', $val);
                 $databases[$key] = $val;
             }
         }
@@ -96,7 +96,7 @@ class DatabaseExtractor
      *
      * @return string
      */
-    protected function buildAdminerKey(Connection $connection)
+    protected function buildAdminerKey(Connection $connection): string
     {
         /** @var string[] $params */
         $params = $connection->getParams();
@@ -114,7 +114,7 @@ class DatabaseExtractor
      *
      * @return string
      */
-    protected function getAdminerDriver(Connection $connection)
+    protected function getAdminerDriver(Connection $connection): string
     {
         $dbName = $connection->getDatabasePlatform()->getName();
 
@@ -133,7 +133,7 @@ class DatabaseExtractor
      *
      * @return string
      */
-    protected function getAdminerHost(Connection $connection)
+    protected function getAdminerHost(Connection $connection): string
     {
         $host = $connection->getHost();
         $port = (int)$connection->getPort();
@@ -160,7 +160,7 @@ class DatabaseExtractor
      *
      * @return string
      */
-    protected function encryptAdminerPassword(Connection $connection)
+    protected function encryptAdminerPassword(Connection $connection): string
     {
         $private = Functions::passwordFile(true);
 
@@ -171,7 +171,7 @@ class DatabaseExtractor
      * @param Request $request
      * @param Connection $connection
      */
-    protected function storeAdminerPassword(Request $request, Connection $connection)
+    protected function storeAdminerPassword(Request $request, Connection $connection): void
     {
         @session_start();
         $driver = $this->getAdminerDriver($connection);

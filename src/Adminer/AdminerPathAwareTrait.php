@@ -23,9 +23,9 @@ trait AdminerPathAwareTrait
      *
      * @return string
      */
-    protected function getAdminerPath($path = '')
+    protected function getAdminerPath($path = ''): string
     {
-        if (is_array($path)) {
+        if (\is_array($path)) {
             $path = implode(DIRECTORY_SEPARATOR, $path);
         }
 
@@ -35,7 +35,7 @@ trait AdminerPathAwareTrait
     /**
      * @param string $adminerPath
      */
-    protected function setAdminerPath($adminerPath)
+    protected function setAdminerPath($adminerPath): void
     {
         $this->adminerPath = realpath($adminerPath);
 

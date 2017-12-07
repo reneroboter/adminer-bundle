@@ -18,18 +18,18 @@ class Functions
      *
      * @return string
      */
-    public static function getTempDir()
+    public static function getTempDir(): string
     {
         $return = ini_get('upload_tmp_dir'); // session_save_path() may contain other storage path
         if (!$return) {
-            if (function_exists('sys_get_temp_dir')) {
+            if (\function_exists('sys_get_temp_dir')) {
                 $return = sys_get_temp_dir();
             } else {
                 $filename = @tempnam('', ''); // @ - temp directory can be disabled by open_basedir
                 if (!$filename) {
                     return false;
                 }
-                $return = dirname($filename);
+                $return = \dirname($filename);
                 unlink($filename);
             }
         }
@@ -69,7 +69,7 @@ class Functions
      *
      * @return string 32 hexadecimal characters
      */
-    public static function randString()
+    public static function randString(): string
     {
         return md5(uniqid(mt_rand(), true));
     }
