@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Triotech\AdminerBundle\Adminer\AdminerPathAwareTrait;
+use Triotech\AdminerBundle\Adminer\DatabaseExtractor;
 
 class ProxyController extends Controller
 {
@@ -40,8 +41,9 @@ class ProxyController extends Controller
     public function proxyAction(Request $request): Response
     {
         $this->disableProfiler();
-        $response = $this->get('triotech.adminer.database_extractor')->updateAdminerDatabases($request);
+        $response = $this->get(DatabaseExtractor::class)->updateAdminerDatabases($request);
 
+        session_write_close();
         return $response instanceof Response ? $response : new Response(require 'file://' . $this->getAdminerPath(['public', 'index.php']));
     }
 
