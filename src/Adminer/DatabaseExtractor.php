@@ -173,7 +173,10 @@ class DatabaseExtractor
      */
     protected function storeAdminerPassword(Request $request, Connection $connection): void
     {
-        @session_start();
+        if (PHP_SESSION_NONE === session_status()) {
+            session_start();
+        }
+
         $driver = $this->getAdminerDriver($connection);
         $server = $this->getAdminerHost($connection);
         $db = $connection->getDatabase();

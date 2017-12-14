@@ -43,7 +43,6 @@ class ProxyController extends Controller
         $this->disableProfiler();
         $response = $this->get(DatabaseExtractor::class)->updateAdminerDatabases($request);
 
-        session_write_close();
         return $response instanceof Response ? $response : new Response(require 'file://' . $this->getAdminerPath(['public', 'index.php']));
     }
 
