@@ -21,7 +21,7 @@ composer require triotech/adminer-bundle dev-master@dev
 
 2. Load the bundle in the dev environment
 
-AppKernel.php:
+app/AppKernel.php:
 ```php
 <?php
     // public function registerBundles()
@@ -33,7 +33,7 @@ AppKernel.php:
     // ...
 ```
 
-routing_dev.yml:
+app/config/routing_dev.yml:
 ```yaml
 _triotech_adminer:
   resource: "@TriotechAdminerBundle/Resources/config/routing.yml"
