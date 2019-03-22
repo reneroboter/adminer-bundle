@@ -1,0 +1,2 @@
+imports:
+- resource: '%vendor_dir%/triotech/coding-standard/easy-coding-standard.yaml'

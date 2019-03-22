@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -16,10 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class TriotechAdminerExtension extends ConfigurableExtension
+final class TriotechAdminerExtension extends ConfigurableExtension
 {
     /** @inheritdoc */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $container->setParameter('triotech.adminer_path', $mergedConfig['adminer_path']);
 

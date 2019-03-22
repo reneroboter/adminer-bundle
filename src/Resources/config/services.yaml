@@ -1,17 +1,16 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+    bind:
+      $adminerPath: "%triotech.adminer_path%"
 
-    Triotech\AdminerBundle\Adminer\DatabaseExtractor:
-        public: true
-        class: Triotech\AdminerBundle\Adminer\DatabaseExtractor
-        arguments:
-            - "@doctrine"
-            - "%triotech.adminer_path%"
+  Triotech\AdminerBundle\Adminer\DatabaseExtractor:
+  Triotech\AdminerBundle\Controller\ProxyController:
 
-    Triotech\AdminerBundle\DataCollector\ProfilerIcon:
-        class: Triotech\AdminerBundle\DataCollector\ProfilerIcon
-        tags:
-            - { name: data_collector, template: "@TriotechAdminer/profiler_toolbar_link.html.twig", id: "profiler_adminer_icon" }
+  Triotech\AdminerBundle\DataCollector\ProfilerIcon:
+    tags:
+    - name: data_collector
+      template: "@TriotechAdminer/profiler_toolbar_link.html.twig"
+      id: "profiler_adminer_icon"

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Triotech\AdminerBundle\DataCollector;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 
-class ProfilerIcon implements DataCollectorInterface
+final class ProfilerIcon implements DataCollectorInterface
 {
     /** @inheritdoc */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null): void
     {
     }
 
@@ -20,7 +22,7 @@ class ProfilerIcon implements DataCollectorInterface
     }
 
     /** @inheritdoc */
-    public function reset()
+    public function reset(): void
     {
     }
 }

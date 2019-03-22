@@ -36,6 +36,6 @@ AppKernel.php:
 routing_dev.yml:
 ```yaml
 _triotech_adminer:
-  resource: "@TriotechAdminerBundle/Resources/config/routing.yml"
+  resource: "@TriotechAdminerBundle/Resources/config/routing.yaml"
   prefix: /_adminer
 ```

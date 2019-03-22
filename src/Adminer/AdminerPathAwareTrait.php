@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -19,14 +22,14 @@ trait AdminerPathAwareTrait
     protected $adminerPath;
 
     /**
-     * @param array|string $path
+     * @param string[]|string $path
      *
      * @return string
      */
     protected function getAdminerPath($path = ''): string
     {
         if (\is_array($path)) {
-            $path = implode(DIRECTORY_SEPARATOR, $path);
+            $path = \implode(DIRECTORY_SEPARATOR, $path);
         }
 
         return $this->adminerPath . DIRECTORY_SEPARATOR . $path;
@@ -35,9 +38,9 @@ trait AdminerPathAwareTrait
     /**
      * @param string $adminerPath
      */
-    protected function setAdminerPath($adminerPath): void
+    protected function setAdminerPath(string $adminerPath): void
     {
-        $this->adminerPath = realpath($adminerPath);
+        $this->adminerPath = \realpath($adminerPath);
 
         if ($this->adminerPath === false) {
             throw new NotFoundHttpException('Adminer not found');
