@@ -1,31 +1,34 @@
 {
-    "name": "triotech/adminer-bundle",
-    "description": "Access your Symfony-defined databases via Adminer",
-    "type": "symfony-bundle",
-    "license": "EUPL-1.2",
-    "authors": [
-        {
-            "name": "Cyril SAINT-YVES",
-            "email": "cyril.saint-yves@triotech.fr"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Triotech\\AdminerBundle\\": "src"
-        },
-        "files": [
-            "src/xxtea.inc.php"
-        ]
-    },
-    "require": {
-        "php": "^7.1",
-        "doctrine/doctrine-bundle": "^1.6",
-        "triotech/adminer": "^1.0"
-    },
-    "repositories": {
-        "triotech": {
-            "type": "composer",
-            "url": "https://packages.triotech.fr"
-        }
+  "name": "triotech/adminer-bundle",
+  "description": "Access your Symfony-defined databases via Adminer",
+  "type": "symfony-bundle",
+  "license": "EUPL-1.2",
+  "authors": [
+    {
+      "name": "Cyril SAINT-YVES",
+      "email": "cyril.saint-yves@triotech.fr"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Triotech\\AdminerBundle\\": "src"
+    },
+    "files": [
+      "lib/xxtea.inc.php"
+    ]
+  },
+  "require": {
+    "php": "^7.2",
+    "doctrine/doctrine-bundle": "^1.6",
+    "triotech/adminer": "^1.0"
+  },
+  "require-dev": {
+    "triotech/coding-standard": "^1.0"
+  },
+  "repositories": {
+    "triotech": {
+      "type": "composer",
+      "url": "https://packages.triotech.fr"
+    }
+  }
 }

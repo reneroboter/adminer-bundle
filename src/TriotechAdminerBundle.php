@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -13,6 +16,6 @@ namespace Triotech\AdminerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class TriotechAdminerBundle extends Bundle
+final class TriotechAdminerBundle extends Bundle
 {
 }

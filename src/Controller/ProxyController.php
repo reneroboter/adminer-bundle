@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -11,26 +14,34 @@
 
 namespace Triotech\AdminerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Triotech\AdminerBundle\Adminer\AdminerPathAwareTrait;
 use Triotech\AdminerBundle\Adminer\DatabaseExtractor;
 
-class ProxyController extends Controller
+final class ProxyController extends AbstractController
 {
     use AdminerPathAwareTrait;
 
-    /** @inheritdoc */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        parent::setContainer($container);
+    /** @var DatabaseExtractor */
+    private $databaseExtractor;
+    /** @var Profiler|null */
+    private $profiler;
 
-        if ($container instanceof ContainerInterface) {
-            $this->setAdminerPath($container->getParameter('triotech.adminer_path'));
-        }
+    /**
+     * @param string $adminerPath
+     * @param DatabaseExtractor $databaseExtractor
+     * @param Profiler|null $profiler
+     */
+    public function __construct(string $adminerPath, DatabaseExtractor $databaseExtractor, ?Profiler $profiler)
+    {
+        $this->setAdminerPath($adminerPath);
+
+        $this->databaseExtractor = $databaseExtractor;
+        $this->profiler = $profiler;
     }
 
     /**
@@ -41,18 +52,18 @@ class ProxyController extends Controller
     public function proxyAction(Request $request): Response
     {
         $this->disableProfiler();
-        $response = $this->get(DatabaseExtractor::class)->updateAdminerDatabases($request);
+        $response = $this->databaseExtractor->updateAdminerDatabases($request);
 
         return $response instanceof Response ? $response : new Response(require 'file://' . $this->getAdminerPath(['public', 'index.php']));
     }
 
     /**
-     * @param $type
-     * @param $asset
+     * @param string $type
+     * @param string $asset
      *
      * @return Response
      */
-    public function assetAction($type, $asset): Response
+    public function assetAction(string $type, string $asset): Response
     {
         $this->disableProfiler();
         $response = new BinaryFileResponse($this->getAdminerPath(['public', $type, $asset]));
@@ -67,14 +78,12 @@ class ProxyController extends Controller
     }
 
     /**
-     * @return self
+     * Disabled Symfony Profiler
      */
-    protected function disableProfiler(): self
+    private function disableProfiler(): void
     {
-        if ($this->container->has('profiler')) {
-            $this->container->get('profiler')->disable();
+        if (null !== $this->profiler) {
+            $this->profiler->disable();
         }
-
-        return $this;
     }
 }

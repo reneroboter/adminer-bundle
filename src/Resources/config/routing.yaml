@@ -1,9 +1,9 @@
 triotech_adminer_home:
   path: /
   defaults:
-    _controller: TriotechAdminerBundle:Proxy:proxy
+    _controller: 'Triotech\AdminerBundle\Controller\ProxyController::proxyAction'
 
 triotech_adminer_css:
   path: /{type}/{asset}
   defaults:
-    _controller: TriotechAdminerBundle:Proxy:asset
+    _controller: 'Triotech\AdminerBundle\Controller\ProxyController::assetAction'

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -16,9 +19,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use function Adminer\xxtea\encrypt_string;
 
-class DatabaseExtractor
+final class DatabaseExtractor
 {
     use AdminerPathAwareTrait;
 
@@ -32,7 +34,7 @@ class DatabaseExtractor
      * @param RegistryInterface $doctrine
      * @param string $adminerPath
      */
-    public function __construct(RegistryInterface $doctrine, $adminerPath)
+    public function __construct(RegistryInterface $doctrine, string $adminerPath)
     {
         $this->doctrine = $doctrine;
         $this->setAdminerPath($adminerPath);
@@ -51,9 +53,9 @@ class DatabaseExtractor
         foreach ($this->doctrine->getConnections() as $connection) {
             $this->storeAdminerPassword($request, $connection);
             $key = $this->buildAdminerKey($connection);
-            $val = implode(':', [$key, urlencode($this->encryptAdminerPassword($connection))]);
+            $val = \implode(':', [$key, \urlencode($this->encryptAdminerPassword($connection))]);
 
-            if (!array_key_exists($key, $databases) || $databases[$key] !== $val) {
+            if (!\array_key_exists($key, $databases) || $databases[$key] !== $val) {
                 $edited = true;
                 $databases[$key] = $val;
             }
@@ -66,7 +68,7 @@ class DatabaseExtractor
         $uri = $request->getBaseUrl() . $request->getPathInfo();
         $response = new RedirectResponse($request->getUri());
 
-        $response->headers->setCookie(new Cookie(static::ADMINER_PERMANENT_COOKIE, implode(' ', $databases), new \DateTime('next month'), $uri));
+        $response->headers->setCookie(new Cookie(static::ADMINER_PERMANENT_COOKIE, \implode(' ', $databases), new \DateTime('next month'), $uri));
 
         return $response;
     }
@@ -74,7 +76,7 @@ class DatabaseExtractor
     /**
      * @param Request $request
      *
-     * @return array
+     * @return string[]
      */
     protected function readAdminerDatabases(Request $request): array
     {
@@ -82,8 +84,8 @@ class DatabaseExtractor
         $databases = [];
 
         if ($cookie) {
-            foreach (explode(' ', $cookie) as $val) {
-                [$key] = explode(':', $val);
+            foreach (\explode(' ', $cookie) as $val) {
+                [$key] = \explode(':', $val);
                 $databases[$key] = $val;
             }
         }
@@ -101,11 +103,11 @@ class DatabaseExtractor
         /** @var string[] $params */
         $params = $connection->getParams();
 
-        return implode('-', [
-            base64_encode($this->getAdminerDriver($connection)),
-            base64_encode($this->getAdminerHost($connection)),
-            base64_encode($params['user']),
-            base64_encode($params['dbname']),
+        return \implode('-', [
+            \base64_encode($this->getAdminerDriver($connection)),
+            \base64_encode($this->getAdminerHost($connection)),
+            \base64_encode($params['user']),
+            \base64_encode($params['dbname']),
         ]);
     }
 
@@ -164,7 +166,7 @@ class DatabaseExtractor
     {
         $private = Functions::passwordFile(true);
 
-        return $private ? encrypt_string($connection->getPassword(), $private) : '';
+        return $private ? \XXTEA::encrypt($connection->getPassword(), $private) : '';
     }
 
     /**
@@ -173,15 +175,15 @@ class DatabaseExtractor
      */
     protected function storeAdminerPassword(Request $request, Connection $connection): void
     {
-        if (PHP_SESSION_NONE === session_status()) {
-            session_start();
+        if (PHP_SESSION_NONE === \session_status()) {
+            \session_start();
         }
 
         $driver = $this->getAdminerDriver($connection);
         $server = $this->getAdminerHost($connection);
         $db = $connection->getDatabase();
         $username = $connection->getUsername();
-        $password = $request->cookies->has(static::ADMINER_KEY_COOKIE) ? encrypt_string($connection->getPassword(), $request->cookies->get(static::ADMINER_KEY_COOKIE)) : '';
+        $password = $request->cookies->has(static::ADMINER_KEY_COOKIE) ? \XXTEA::encrypt($connection->getPassword(), $request->cookies->get(static::ADMINER_KEY_COOKIE)) : '';
 
         $_SESSION['pwds'][$driver][$server][$username] = [$password];
         $_SESSION['db'][$driver][$server][$username][$db] = true;

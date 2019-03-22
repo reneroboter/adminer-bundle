@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This file is part of the TRIOTECH adminer-bundle project.
  *
@@ -11,26 +14,26 @@
 
 namespace Triotech\AdminerBundle\Adminer;
 
-class Functions
+final class Functions
 {
     /**
      * Get path of the temporary directory
      *
      * @return string
      */
-    public static function getTempDir(): string
+    public static function getTempDir(): ?string
     {
-        $return = ini_get('upload_tmp_dir'); // session_save_path() may contain other storage path
+        $return = \ini_get('upload_tmp_dir'); // session_save_path() may contain other storage path
         if (!$return) {
             if (\function_exists('sys_get_temp_dir')) {
-                $return = sys_get_temp_dir();
+                $return = \sys_get_temp_dir();
             } else {
-                $filename = @tempnam('', ''); // @ - temp directory can be disabled by open_basedir
+                $filename = @\tempnam('', ''); // @ - temp directory can be disabled by open_basedir
                 if (!$filename) {
-                    return false;
+                    return null;
                 }
                 $return = \dirname($filename);
-                unlink($filename);
+                \unlink($filename);
             }
         }
 
@@ -40,25 +43,25 @@ class Functions
     /**
      * Read password from file adminer.key in temporary directory or create one
      *
-     * @param bool
+     * @param bool $create
      *
      * @return string or false if the file can not be created
      */
-    public static function passwordFile($create)
+    public static function passwordFile(bool $create): string
     {
         $filename = static::getTempDir() . '/adminer.key';
-        $return = @file_get_contents($filename); // @ - may not exist
+        $return = @\file_get_contents($filename); // @ - may not exist
 
         if ($return || !$create) {
             return $return;
         }
 
-        $fp = @fopen($filename, 'w'); // @ - can have insufficient rights //! is not atomic
+        $fp = @\fopen($filename, 'w'); // @ - can have insufficient rights //! is not atomic
         if ($fp) {
-            chmod($filename, 0660);
+            \chmod($filename, 0660);
             $return = static::randString();
-            fwrite($fp, $return);
-            fclose($fp);
+            \fwrite($fp, $return);
+            \fclose($fp);
         }
 
         return $return;
@@ -71,6 +74,6 @@ class Functions
      */
     public static function randString(): string
     {
-        return md5(uniqid(mt_rand(), true));
+        return \md5(\uniqid((string) \mt_rand(), true));
     }
 }
