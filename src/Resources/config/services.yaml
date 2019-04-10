@@ -14,3 +14,7 @@ services:
     - name: data_collector
       template: "@TriotechAdminer/profiler_toolbar_link.html.twig"
       id: "profiler_adminer_icon"
+
+  Triotech\AdminerBundle\Twig\TwigExtension:
+    tags:
+    - name: twig.extension
