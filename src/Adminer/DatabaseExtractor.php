@@ -166,7 +166,7 @@ final class DatabaseExtractor
     {
         $private = Functions::passwordFile(true);
 
-        return $private ? \XXTEA::encrypt($connection->getPassword(), $private) : '';
+        return $private ? \XXTEA::encrypt($connection->getPassword() ?? '', $private) : '';
     }
 
     /**
@@ -183,7 +183,7 @@ final class DatabaseExtractor
         $server = $this->getAdminerHost($connection);
         $db = $connection->getDatabase();
         $username = $connection->getUsername();
-        $password = $request->cookies->has(static::ADMINER_KEY_COOKIE) ? \XXTEA::encrypt($connection->getPassword(), $request->cookies->get(static::ADMINER_KEY_COOKIE)) : '';
+        $password = $request->cookies->has(static::ADMINER_KEY_COOKIE) ? \XXTEA::encrypt($connection->getPassword() ?? '', $request->cookies->get(static::ADMINER_KEY_COOKIE)) : '';
 
         $_SESSION['pwds'][$driver][$server][$username] = [$password];
         $_SESSION['db'][$driver][$server][$username][$db] = true;
