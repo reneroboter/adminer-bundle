@@ -22,8 +22,8 @@ final class Configuration implements ConfigurationInterface
     /** @inheritdoc */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('triotech_adminer');
+        $treeBuilder = new TreeBuilder('triotech_adminer');
+        $rootNode = $treeBuilder->getRootNode();
         // @formatter:off
         $rootNode
             ->children()

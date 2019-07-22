@@ -20,6 +20,7 @@
   "require": {
     "php": "^7.2",
     "doctrine/doctrine-bundle": "^1.6",
+    "symfony/config": "^4.2",
     "triotech/adminer": "^1.0"
   },
   "require-dev": {
